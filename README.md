@@ -1,40 +1,45 @@
-# PLAYBACK.EXE — Video.js v10 skin concept
+# CHANNEL ZERO — Video.js v10.3.0 Skin
 
-A retro multimedia application skin inspired by the supplied visual direction: early-2000s application chrome, bright pink/orange/purple gradients, hard black borders, compact utility panels and playful desktop-software details.
+CHANNEL ZERO is a retro broadcast-terminal skin for the Video.js v10 HTML player. It combines a custom media-control layout with a surrounding desktop-style station interface.
 
 ## Run locally
-This is a static HTML project. Because the player uses JavaScript modules, serve it over HTTP rather than opening `index.html` as a file.
+
+This is a static HTML project. Serve the folder over HTTP rather than opening `index.html` with `file://`.
 
 ```bash
-npx serve .
+python -m http.server 8000
 ```
 
-Then open the local URL printed by the server.
+Open <http://localhost:8000>.
 
-## Deploy
-Import this folder into a new GitHub repository and connect it to Vercel or Netlify. No build command is required; publish the project root.
-
-## Video source
-The demo currently uses MDN's public CC0 flower sample video. Replace the `src` on the `<video>` element in `index.html` with your own MP4 or HLS URL. For the challenge's Mux bonus, upload a video to Mux and use its public playback URL / playback ID with the appropriate Video.js Mux media integration.
+The page loads Video.js v10.3.0 from jsDelivr and uses a public Mux MP4 sample. Replace the `<video src>` in `index.html` with a public MP4 URL to test another source.
 
 ## Included interactions
-- Video.js v10 player and custom Video.js UI components
-- Play/pause, timeline seeking, current/duration time, mute and fullscreen
-- Keyboard shortcuts: Space, M, F, Left and Right arrows
-- Chapter marker buttons (demo markers)
-- Brightness and contrast filters applied to the video
-- Save display settings in local storage
-- Window controls and retro application menu dialogs
-- Responsive layout, visible focus, reduced-motion and forced-colors styles
+
+- Play / pause using the player button or Space
+- Seek using the timeline or Left / Right arrow keys
+- Mute / unmute using the button or M
+- Volume level using the accessible volume slider
+- Fullscreen using the button or F
+- Three demo chapter markers at 0, 18 and 38 seconds
+- Player time display, status announcements and an error dialog
+- Responsive layout, visible keyboard focus and reduced-motion support
+
+Chapter timestamps are demonstration values. Change the `data-time` attributes on the chapter buttons to match the supplied video.
+
+## Implementation notes
+
+- Uses the official Video.js v10 HTML CDN bundle: `@videojs/cdn@10.3.0/video.js`.
+- The custom controls use Video.js v10 UI elements and state attributes. The player markup follows the official “Build your own skin” structure.
+- The controls are Video.js v10 UI elements. Do not load Media Chrome alongside Video.js; both register similarly named custom elements.
+- The sample player uses native HTML5 MP4 playback. HLS, DASH and provider adapters are not included.
 
 ## Before submitting
-- Test in current Chrome, Firefox and Safari.
-- Test a bright and a dark video.
-- Test keyboard-only navigation and mobile touch.
-- Add a real caption track and verify the captions control if you plan to feature captions in the final concept.
-- Replace demo chapter markers with meaningful timestamps for the selected film.
-- Configure a Mux-hosted asset and verify it remains available through judging.
-- Confirm the live deployment uses Video.js v10. The CDN bundles are pinned to `@videojs/cdn@10.3.0`.
+
+Run the project in current Chrome, Firefox and Safari. Verify media playback, keyboard-only operation, touch operation, fullscreen, chapter seeking, loading and error states, captions, and the narrowest supported player width. Confirm that the sample video URL is reachable from the judge's environment.
+
+A static source review is not a substitute for browser testing. This archive has not been run through a live browser QA session.
 
 ## License
-Apache License 2.0 (challenge entry requirement). Add the full license text before public submission.
+
+Apache License 2.0. See `LICENSE`.

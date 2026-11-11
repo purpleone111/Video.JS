@@ -3,181 +3,155 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ff83c9">
-  <title>PLAYBACK.EXE — Multimedia Player</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <meta name="theme-color" content="#ff8bd8">
+  <meta name="description" content="CHANNEL ZERO — an independent broadcast-style Video.js skin.">
+  <title>CHANNEL ZERO — Video.js Skin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/global.css">
-  <link rel="stylesheet" href="./style.css">
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/video-player.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/container.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls-content.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls-group.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/play-button.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/time-slider.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Video.js v10.3.0 HTML CDN preset: registers the player and its supported UI. -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/video.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/volume-slider.js"></script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-track.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-buffer.js"></script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-fill.js"></script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-thumb.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/time.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/mute-button.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/volume-slider.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/fullscreen-button.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/hotkey.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/status-announcer.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/error-dialog.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-popup.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-title.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-description.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-close.js"></script>
 </head>
 <body>
+  <div class="desktop-noise" aria-hidden="true"></div>
   <main class="desktop">
-    <header class="desktop-bar">
-      <div class="brand"><span class="brand-mark">▶</span><span>PIXELSTUDIO</span></div>
-      <div class="desktop-center">MULTIMEDIA WORKSPACE <span>•</span> BUILD 2001.06</div>
-      <div class="desktop-right"><span class="online-dot"></span> SYSTEM ONLINE</div>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">CZ</span><span>CHANNEL ZERO</span><span class="version">MEDIA TERMINAL / 2001</span></div>
+      <div class="topbar-right"><span class="status-dot"></span><span>STATION ONLINE</span><span class="clock" id="clock">00:00:00</span></div>
     </header>
 
-    <section class="intro">
-      <div class="eyebrow"><span class="eyebrow-dot"></span> DIGITAL MEDIA PLAYER / V.01</div>
-      <h1>PLAYBACK<span>.EXE</span></h1>
-      <p class="intro-copy">A little nostalgia. A lot of playback.</p>
-    </section>
+    <section class="workspace">
+      <aside class="left-rail" aria-label="Station status">
+        <div class="rail-label">ON AIR</div>
+        <div class="onair-card"><span class="live-dot"></span><strong>CH. 00</strong><small>INDEPENDENT<br>TRANSMISSION</small></div>
+        <div class="rail-label rail-gap">SIGNAL</div>
+        <div class="signal-bars" aria-label="Signal strength: strong"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="signal-caption">STABLE<br>48 KHZ</div>
+        <div class="rail-sticker">NO<br>REQUESTS<br>JUST<br>VIBES.</div>
+      </aside>
 
-    <section class="app-window" aria-label="PLAYBACK.EXE video player">
-      <div class="window-titlebar">
-        <div class="window-app-icon">▶</div>
-        <div class="window-title">PLAYBACK.EXE <span>—</span> <span id="file-title">caminandes_03_final.mp4</span></div>
-        <div class="window-controls" aria-label="Window controls">
-          <button type="button" class="win-control minimize" aria-label="Minimize window">_</button>
-          <button type="button" class="win-control maximize" aria-label="Toggle expanded view">□</button>
-          <button type="button" class="win-control close" aria-label="Reset player window">×</button>
-        </div>
-      </div>
+      <section class="main-column">
+        <div class="window player-window">
+          <div class="window-titlebar">
+            <div class="traffic"><span></span><span></span><span></span></div>
+            <span class="window-title">zero_station // transmission_001.mp4</span>
+            <div class="window-actions" aria-hidden="true"><b>_</b><b>□</b><b>×</b></div>
+          </div>
 
-      <div class="menu-strip" aria-label="Application menu">
-        <button type="button" data-menu="file">FILE</button>
-        <button type="button" data-menu="view">VIEW</button>
-        <button type="button" data-menu="playback">PLAYBACK</button>
-        <button type="button" data-menu="help">HELP</button>
-        <span class="menu-spacer"></span>
-        <span class="menu-status">READY TO PLAY</span>
-      </div>
+          <div class="player-meta">
+            <div><span class="eyebrow">NOW TRANSMITTING</span><h1>THE WORLD<br><em>IN COLOUR.</em></h1></div>
+            <div class="meta-right"><span class="pill">PROGRAM 001</span><span class="meta-sub">A SHORT ESCAPE<br>FROM THE ORDINARY</span></div>
+          </div>
 
-      <div class="player-stage">
-        <video-player class="pixel-player" playsinline>
-          <media-container class="pixel-media">
-            <video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" playsinline preload="metadata" crossorigin="anonymous"></video>
-            <media-controls>
-              <media-controls-content class="pixel-overlay-controls">
-                <media-time-slider class="pixel-timeline" aria-label="Seek video">
-                  <media-slider-track class="pixel-track">
-                    <media-slider-buffer class="pixel-buffer"></media-slider-buffer>
-                    <media-slider-fill class="pixel-fill"></media-slider-fill>
-                  </media-slider-track>
-                  <media-slider-thumb class="pixel-thumb"></media-slider-thumb>
-                </media-time-slider>
-                <media-controls-group class="pixel-control-row" aria-label="Playback controls">
-                  <media-play-button class="pixel-play" aria-label="Play or pause">
-                    <span class="when-paused">▶ PLAY</span><span class="when-playing">Ⅱ PAUSE</span>
-                  </media-play-button>
-                  <div class="time-readout"><media-time type="current"></media-time><span>/</span><media-time type="duration"></media-time></div>
-                  <span class="control-spacer"></span>
-                  <media-mute-button class="pixel-mute" aria-label="Mute or unmute">
-                    <span class="when-muted">SOUND OFF</span><span class="when-unmuted">SOUND ON</span>
-                  </media-mute-button>
-                  <media-volume-slider class="pixel-volume-slider" aria-label="Volume">
-                    <media-slider-track class="volume-track">
-                      <media-slider-fill class="volume-fill"></media-slider-fill>
+          <!-- Custom skin markup follows the official Video.js v10 HTML component model. -->
+          <video-player class="cz-player">
+            <media-container class="cz-screen">
+              <video
+                src="https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/highest.mp4"
+                playsinline
+                preload="metadata"
+                crossorigin="anonymous"
+                aria-label="CHANNEL ZERO sample transmission"
+              ></video>
+
+              <div class="screen-overlay" aria-hidden="true">
+                <span class="screen-rec"><i></i> REC / 00</span>
+                <span class="screen-code">CZ—001<br>LIVE FROM<br>EVERYWHERE</span>
+              </div>
+
+              <media-controls class="cz-controls">
+                <media-controls-content class="cz-controls-content">
+                  <media-time-slider class="cz-time-slider" label="Seek through video">
+                    <media-slider-track class="cz-track">
+                      <media-slider-buffer class="cz-buffer"></media-slider-buffer>
+                      <media-slider-fill class="cz-fill"></media-slider-fill>
                     </media-slider-track>
-                    <media-slider-thumb class="volume-thumb"></media-slider-thumb>
-                  </media-volume-slider>
-                  <media-fullscreen-button class="pixel-fullscreen" aria-label="Fullscreen">
-                    <span class="when-not-fullscreen">⛶ FULLSCREEN</span><span class="when-fullscreen">↙ EXIT</span>
-                  </media-fullscreen-button>
-                </media-controls-group>
-              </media-controls-content>
-            </media-controls>
-            <media-hotkey keys="Space" action="togglePaused"></media-hotkey>
-            <media-hotkey keys="m" action="toggleMuted"></media-hotkey>
-            <media-hotkey keys="f" action="toggleFullscreen"></media-hotkey>
-            <media-hotkey keys="ArrowLeft" action="seekStep" value="-5"></media-hotkey>
-            <media-hotkey keys="ArrowRight" action="seekStep" value="5"></media-hotkey>
-            <media-status-announcer></media-status-announcer>
-            <media-error-dialog>
-              <media-dialog-popup class="pixel-error">
-                <media-dialog-title>PLAYBACK ERROR</media-dialog-title>
-                <media-dialog-description></media-dialog-description>
-                <media-dialog-close>OK</media-dialog-close>
-              </media-dialog-popup>
-            </media-error-dialog>
-          </media-container>
-        </video-player>
-        <div class="stage-corner stage-corner-tl">LIVE PREVIEW</div>
-        <div class="stage-corner stage-corner-br">16:9 / VIDEO</div>
-      </div>
+                    <media-slider-thumb class="cz-thumb"></media-slider-thumb>
+                  </media-time-slider>
 
-      <div class="utility-row">
-        <div class="utility-left">
-          <span class="utility-led"></span>
-          <span id="status-text">FILE LOADED</span>
+                  <media-controls-group class="cz-control-row" aria-label="Playback controls">
+                    <media-play-button class="cz-play" aria-label="Play or pause">
+                      <span class="show-when-paused">▶</span>
+                      <span class="show-when-playing">Ⅱ</span>
+                    </media-play-button>
+                    <media-time type="current" class="cz-time"></media-time>
+                    <span class="time-divider" aria-hidden="true">/</span>
+                    <media-time type="duration" class="cz-time"></media-time>
+                    <span class="control-spacer"></span>
+                    <media-mute-button class="cz-mute" aria-label="Mute or unmute">
+                      <span class="show-when-muted">SOUND OFF</span>
+                      <span class="show-when-unmuted">SOUND ON</span>
+                    </media-mute-button>
+                    <media-volume-slider class="cz-volume" label="Volume">
+                      <media-slider-track class="cz-volume-track">
+                        <media-slider-fill class="cz-volume-fill"></media-slider-fill>
+                      </media-slider-track>
+                      <media-slider-thumb class="cz-volume-thumb"></media-slider-thumb>
+                    </media-volume-slider>
+                    <media-fullscreen-button class="cz-fullscreen" aria-label="Enter or exit fullscreen">
+                      <span class="show-when-fullscreen">EXIT FULLSCREEN ↙</span>
+                      <span class="show-when-not-fullscreen">FULLSCREEN ↗</span>
+                    </media-fullscreen-button>
+                  </media-controls-group>
+                </media-controls-content>
+              </media-controls>
+
+              <media-hotkey keys="Space" action="togglePaused"></media-hotkey>
+              <media-hotkey keys="m" action="toggleMuted"></media-hotkey>
+              <media-hotkey keys="f" action="toggleFullscreen"></media-hotkey>
+              <media-hotkey keys="ArrowLeft" action="seekStep" value="-5"></media-hotkey>
+              <media-hotkey keys="ArrowRight" action="seekStep" value="5"></media-hotkey>
+              <media-status-announcer></media-status-announcer>
+              <media-error-dialog>
+                <media-dialog-popup class="cz-error">
+                  <media-dialog-title></media-dialog-title>
+                  <media-dialog-description></media-dialog-description>
+                  <media-dialog-close></media-dialog-close>
+                </media-dialog-popup>
+              </media-error-dialog>
+            </media-container>
+          </video-player>
+
+          <div class="window-footer"><span>◉ SIGNAL LOCKED</span><span>VIDEO.JS V10.3.0</span><span>APACHE 2.0</span></div>
         </div>
-        <div class="utility-right"><span>BUFFER</span><div class="buffer-meter"><i id="buffer-fill"></i></div><span id="buffer-percent">--%</span></div>
-      </div>
 
-      <div class="app-bottom">
-        <section class="tool-panel chapters-panel">
-          <div class="panel-heading"><span>▤</span> CHAPTER MARKERS <span class="panel-count">03</span></div>
-          <div class="chapter-list">
-            <button type="button" class="chapter active" data-seek="0"><span class="chapter-number">01</span><span>INTRO / FLOWERS</span><span class="chapter-arrow">↗</span></button>
-            <button type="button" class="chapter" data-seek="25"><span class="chapter-number">02</span><span>THE MIDDLE</span><span class="chapter-arrow">↗</span></button>
-            <button type="button" class="chapter" data-seek="70"><span class="chapter-number">03</span><span>THE ENDING</span><span class="chapter-arrow">↗</span></button>
-          </div>
-          <p class="panel-note">SELECT A MARKER TO JUMP THROUGH THE FILE.</p>
-        </section>
+        <div class="lower-grid">
+          <section class="window chapter-window">
+            <div class="mini-title"><span>TRANSMISSION INDEX</span><span>▤</span></div>
+            <div class="chapter-list">
+              <button class="chapter active" type="button" data-time="0"><span class="chapter-no">01</span><span>THE OPENING</span><span class="chapter-arrow">↗</span></button>
+              <button class="chapter" type="button" data-time="18"><span class="chapter-no">02</span><span>THE IN-BETWEEN</span><span class="chapter-arrow">↗</span></button>
+              <button class="chapter" type="button" data-time="38"><span class="chapter-no">03</span><span>OUT OF OFFICE</span><span class="chapter-arrow">↗</span></button>
+            </div>
+          </section>
+          <section class="window info-window">
+            <div class="mini-title"><span>STATION NOTES</span><span>✳</span></div>
+            <p>You're tuned into the strange little corner of the internet where the picture gets the spotlight.</p>
+            <div class="info-bottom"><span>NO ALGORITHMS.</span><span>NO STATIC.</span></div>
+          </section>
+        </div>
+      </section>
 
-        <section class="tool-panel adjustments-panel">
-          <div class="panel-heading"><span>◒</span> DISPLAY SETTINGS <span class="panel-count">FX</span></div>
-          <div class="adjustment">
-            <label for="brightness">BRIGHTNESS <output id="brightness-value">100%</output></label>
-            <input id="brightness" type="range" min="50" max="150" value="100">
-          </div>
-          <div class="adjustment">
-            <label for="contrast">CONTRAST <output id="contrast-value">100%</output></label>
-            <input id="contrast" type="range" min="50" max="150" value="100">
-          </div>
-          <div class="adjustment-actions">
-            <button type="button" class="small-action" id="reset-fx">RESET</button>
-            <button type="button" class="small-action save-action" id="save-fx">SAVE SETTINGS</button>
-          </div>
-        </section>
-
-        <section class="tool-panel info-panel">
-          <div class="panel-heading"><span>▣</span> FILE INFO <span class="panel-count">INFO</span></div>
-          <div class="file-info"><span>FORMAT</span><b>MP4 / H.264</b></div>
-          <div class="file-info"><span>ASPECT</span><b>16 : 9</b></div>
-          <div class="file-info"><span>ENGINE</span><b>VIDEO.JS V10</b></div>
-          <div class="file-info"><span>STATUS</span><b class="file-ready">● READY</b></div>
-        </section>
-      </div>
-      <footer class="window-statusbar"><span>PIXELSTUDIO MEDIA SYSTEM</span><span>ALL SYSTEMS NOMINAL</span><span>© 2001—2026</span></footer>
+      <aside class="right-rail" aria-label="Station colour and frequency">
+        <div class="rail-label">COLOUR TEST</div>
+        <div class="colour-stack"><span></span><span></span><span></span><span></span></div>
+        <div class="rail-label rail-gap">FREQUENCY</div>
+        <div class="frequency">001<span>.00</span></div>
+        <div class="rail-sticker right-sticker">STAY<br>TUNED<br>✳</div>
+      </aside>
     </section>
 
-    <footer class="page-footer">
-      <span>MADE FOR THE INTERNET, NOT THE ARCHIVE.</span>
-      <span>KEYBOARD: SPACE PLAY / M MUTE / F FULLSCREEN / ← → SEEK</span>
+    <footer class="taskbar">
+      <div class="task-start"><span class="brand-mark small">CZ</span> ZERO DESK</div>
+      <div class="task-message">YOU ARE EXACTLY WHERE YOU NEED TO BE.</div>
+      <div class="task-clock" id="taskClock">00:00</div>
     </footer>
   </main>
-
-  <dialog id="notice-dialog" class="retro-dialog">
-    <div class="dialog-title"><span id="dialog-heading">NOTICE</span><button type="button" id="dialog-x" aria-label="Close dialog">×</button></div>
-    <div class="dialog-content" id="dialog-copy">This is a PLAYBACK.EXE feature.</div>
-    <div class="dialog-actions"><button type="button" id="dialog-ok">OK</button></div>
-  </dialog>
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
