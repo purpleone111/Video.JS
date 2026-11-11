@@ -1,227 +1,183 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Registration — a riso-print skin for Video.js v10</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --paper:#f4ecd8; --ink:#14110f; --pink:#ff48b0; --blue:#0078bf; --yellow:#ffe800;
-  --display:"Archivo Black","Arial Black",Impact,sans-serif;
-  --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--mono);
-  background-image:radial-gradient(rgb(20 17 15/.12) 1px,transparent 1.4px);background-size:7px 7px}
-main{max-width:980px;margin:0 auto;padding:clamp(16px,4vw,40px)}
-h1{font:clamp(2.4rem,9vw,5.5rem)/.88 var(--display);margin:0 0 .25em;text-transform:uppercase;letter-spacing:-.02em}
-h1 span{color:var(--pink);-webkit-text-stroke:0;text-shadow:4px 4px 0 var(--blue)}
-.lede{max-width:60ch;margin:0 0 1.5rem;font-size:.95rem;line-height:1.5}
-.notes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:2rem;font-size:.85rem;line-height:1.45}
-.notes div{border:3px solid var(--ink);background:#fff8e6;padding:12px;box-shadow:5px 5px 0 var(--ink)}
-.notes b{font-family:var(--display);text-transform:uppercase;display:block;margin-bottom:4px}
-
-/* ============ THE SKIN ============ */
-video-player{display:block}
-.reg{
-  position:relative;display:block;container-type:inline-size;
-  aspect-ratio:16/9;background:#000;border:4px solid var(--ink);
-  box-shadow:8px 8px 0 var(--blue),8px 8px 0 4px var(--ink);
-  font-family:var(--mono);color:var(--ink);overflow:hidden;
-}
-.reg video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
-
-/* big play stamp */
-.reg-stamp{
-  position:absolute;left:50%;top:50%;translate:-50% -50%;
-  width:clamp(72px,16cqw,120px);aspect-ratio:1;display:grid;place-items:center;
-  background:var(--yellow);border:4px solid var(--ink);border-radius:50%;
-  box-shadow:6px 6px 0 var(--pink),6px 6px 0 4px var(--ink);cursor:pointer;
-  transition:opacity .2s,scale .15s;
-}
-.reg-stamp::before{content:"";border:solid transparent;border-width:clamp(14px,3.4cqw,24px) 0 clamp(14px,3.4cqw,24px) clamp(22px,5cqw,38px);border-left-color:var(--ink);margin-left:8%}
-.reg-stamp:not([data-paused]){opacity:0;pointer-events:none;scale:.8}
-
-/* control panel */
-.reg-controls{
-  position:absolute;inset:auto 10px 10px;padding:10px;
-  background:var(--paper);border:3px solid var(--ink);
-  background-image:radial-gradient(rgb(20 17 15/.14) 1px,transparent 1.4px);background-size:6px 6px;
-  box-shadow:5px 5px 0 var(--ink);
-  display:grid;gap:10px;transition:opacity .25s,translate .25s;
-}
-.reg-controls:not([data-visible]):not(:has(:focus-visible)){opacity:0;translate:0 12px}
-
-/* seek bar: ink track, misregistered pink/blue fill, crosshair thumb */
-.reg-seek{position:relative;display:flex;align-items:center;height:36px;cursor:pointer;touch-action:none}
-.reg-track{position:relative;width:100%;height:18px;background:#fff8e6;border:3px solid var(--ink);overflow:hidden}
-.reg-buffer,.reg-fill{position:absolute;top:0;bottom:0;left:0}
-.reg-buffer{width:var(--media-slider-buffer);background:repeating-linear-gradient(45deg,rgb(20 17 15/.25) 0 3px,transparent 3px 7px)}
-.reg-fill{width:var(--media-slider-fill);background:linear-gradient(var(--pink) 0 50%,var(--blue) 50% 100%);border-right:3px solid var(--ink)}
-.reg-thumb{
-  position:absolute;left:var(--media-slider-fill);top:50%;width:30px;height:30px;translate:-50% -50%;
-  background:var(--paper);border:3px solid var(--ink);border-radius:50%;
-  background-image:linear-gradient(var(--ink),var(--ink)),linear-gradient(var(--ink),var(--ink));
-  background-size:3px 100%,100% 3px;background-position:center;background-repeat:no-repeat;
-}
-
-.reg-row{display:flex;align-items:center;gap:8px}
-.reg-spacer{flex:1}
-.reg-btn{
-  all:unset;box-sizing:border-box;cursor:pointer;min-width:48px;min-height:48px;padding:0 14px;
-  display:inline-flex;align-items:center;justify-content:center;
-  font:1rem/1 var(--display);text-transform:uppercase;letter-spacing:.03em;
-  color:var(--ink);background:var(--paper);border:3px solid var(--ink);
-  box-shadow:4px 4px 0 var(--ink);transition:translate .08s,box-shadow .08s;
-}
-.reg-btn:active{translate:4px 4px;box-shadow:0 0 0 var(--ink)}
-.reg-play{background:var(--yellow);min-width:104px}
-.reg-mute{background:var(--pink)}
-.reg-full{background:var(--blue);color:#fff}
-.reg-btn:hover{filter:brightness(1.06)}
-
-/* visible focus, always */
-.reg :focus-visible{outline:4px solid var(--blue);outline-offset:3px;box-shadow:0 0 0 7px #fff}
-.reg-full:focus-visible{outline-color:var(--ink)}
-
-/* labels per state */
-.reg-play:not([data-paused]) .when-paused,.reg-play[data-paused] .when-playing,
-.reg-mute:not([data-muted]) .when-muted,.reg-mute[data-muted] .when-unmuted,
-.reg-full:not([data-fullscreen]) .when-full,.reg-full[data-fullscreen] .when-notfull{display:none}
-
-.reg-time{font:700 .95rem var(--mono);font-variant-numeric:tabular-nums;background:var(--ink);color:var(--paper);padding:6px 10px;white-space:nowrap}
-.reg-time-sep{opacity:.6;margin:0 .25em}
-
-.reg-vol{position:relative;display:flex;align-items:center;width:110px;height:48px;cursor:pointer;touch-action:none}
-.reg-vol .reg-track{height:14px}
-.reg-vol .reg-fill{background:var(--ink);border-right:0}
-.reg-vol .reg-thumb{width:24px;height:24px}
-
-.reg-error{position:absolute;inset:0;display:grid;place-content:center;gap:12px;padding:24px;text-align:center;background:var(--paper);color:var(--ink)}
-.reg-error:not([data-open]){display:none}
-
-/* small players: drop volume slider, keep mute */
-@container (max-width:560px){
-  .reg-vol{display:none}
-  .reg-controls{inset:auto 6px 6px;padding:8px;gap:6px}
-  .reg-play{min-width:48px}
-  .reg-play span{font-size:.8rem}
-  .reg-time{font-size:.8rem;padding:6px}
-}
-@container (max-width:380px){ .reg-time-dur,.reg-time-sep{display:none} }
-
-@media (prefers-reduced-motion:reduce){
-  .reg *,.reg-stamp,.reg-controls{transition:none!important;animation:none!important}
-}
-@media (forced-colors:active){
-  .reg-btn,.reg-track,.reg-thumb{border-color:CanvasText}
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ff83c9">
+  <title>PLAYBACK.EXE — Multimedia Player</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/global.css">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/video-player.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/container.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls-content.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls-group.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/play-button.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/time-slider.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-track.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-buffer.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-fill.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-thumb.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/time.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/mute-button.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/volume-slider.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/fullscreen-button.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/hotkey.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/status-announcer.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/error-dialog.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-popup.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-title.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-description.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-close.js"></script>
 </head>
 <body>
-<main>
-  <h1>Regis&shy;<span>tration</span></h1>
-  <p class="lede">A Video.js v10 skin built like a two-colour print job: flat ink, a misregistered pink and blue progress bar, and a crosshair thumb. Solid paper panels keep every control readable over any footage.</p>
+  <main class="desktop">
+    <header class="desktop-bar">
+      <div class="brand"><span class="brand-mark">▶</span><span>PIXELSTUDIO</span></div>
+      <div class="desktop-center">MULTIMEDIA WORKSPACE <span>•</span> BUILD 2001.06</div>
+      <div class="desktop-right"><span class="online-dot"></span> SYSTEM ONLINE</div>
+    </header>
 
-  <video-player>
-    <media-container class="reg">
-      <video id="v" playsinline preload="metadata"></video>
+    <section class="intro">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> DIGITAL MEDIA PLAYER / V.01</div>
+      <h1>PLAYBACK<span>.EXE</span></h1>
+      <p class="intro-copy">A little nostalgia. A lot of playback.</p>
+    </section>
 
-      <media-play-button class="reg-stamp" tabindex="-1" aria-hidden="true"></media-play-button>
+    <section class="app-window" aria-label="PLAYBACK.EXE video player">
+      <div class="window-titlebar">
+        <div class="window-app-icon">▶</div>
+        <div class="window-title">PLAYBACK.EXE <span>—</span> <span id="file-title">caminandes_03_final.mp4</span></div>
+        <div class="window-controls" aria-label="Window controls">
+          <button type="button" class="win-control minimize" aria-label="Minimize window">_</button>
+          <button type="button" class="win-control maximize" aria-label="Toggle expanded view">□</button>
+          <button type="button" class="win-control close" aria-label="Reset player window">×</button>
+        </div>
+      </div>
 
-      <media-controls>
-        <media-controls-content class="reg-controls">
-          <media-time-slider class="reg-seek">
-            <media-slider-track class="reg-track">
-              <media-slider-buffer class="reg-buffer"></media-slider-buffer>
-              <media-slider-fill class="reg-fill"></media-slider-fill>
-            </media-slider-track>
-            <media-slider-thumb class="reg-thumb"></media-slider-thumb>
-          </media-time-slider>
+      <div class="menu-strip" aria-label="Application menu">
+        <button type="button" data-menu="file">FILE</button>
+        <button type="button" data-menu="view">VIEW</button>
+        <button type="button" data-menu="playback">PLAYBACK</button>
+        <button type="button" data-menu="help">HELP</button>
+        <span class="menu-spacer"></span>
+        <span class="menu-status">READY TO PLAY</span>
+      </div>
 
-          <media-controls-group class="reg-row" aria-label="Playback controls">
-            <media-play-button class="reg-btn reg-play">
-              <span class="when-paused">Play</span>
-              <span class="when-playing">Pause</span>
-            </media-play-button>
-            <span class="reg-time">
-              <media-time type="current"></media-time><span class="reg-time-sep">/</span><span class="reg-time-dur"><media-time type="duration"></media-time></span>
-            </span>
-            <span class="reg-spacer"></span>
-            <media-volume-slider class="reg-vol">
-              <media-slider-track class="reg-track">
-                <media-slider-fill class="reg-fill"></media-slider-fill>
-              </media-slider-track>
-              <media-slider-thumb class="reg-thumb"></media-slider-thumb>
-            </media-volume-slider>
-            <media-mute-button class="reg-btn reg-mute">
-              <span class="when-muted">Unmute</span>
-              <span class="when-unmuted">Mute</span>
-            </media-mute-button>
-            <media-fullscreen-button class="reg-btn reg-full">
-              <span class="when-notfull">Full</span>
-              <span class="when-full">Exit</span>
-            </media-fullscreen-button>
-          </media-controls-group>
-        </media-controls-content>
-      </media-controls>
+      <div class="player-stage">
+        <video-player class="pixel-player" playsinline>
+          <media-container class="pixel-media">
+            <video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" playsinline preload="metadata" crossorigin="anonymous"></video>
+            <media-controls>
+              <media-controls-content class="pixel-overlay-controls">
+                <media-time-slider class="pixel-timeline" aria-label="Seek video">
+                  <media-slider-track class="pixel-track">
+                    <media-slider-buffer class="pixel-buffer"></media-slider-buffer>
+                    <media-slider-fill class="pixel-fill"></media-slider-fill>
+                  </media-slider-track>
+                  <media-slider-thumb class="pixel-thumb"></media-slider-thumb>
+                </media-time-slider>
+                <media-controls-group class="pixel-control-row" aria-label="Playback controls">
+                  <media-play-button class="pixel-play" aria-label="Play or pause">
+                    <span class="when-paused">▶ PLAY</span><span class="when-playing">Ⅱ PAUSE</span>
+                  </media-play-button>
+                  <div class="time-readout"><media-time type="current"></media-time><span>/</span><media-time type="duration"></media-time></div>
+                  <span class="control-spacer"></span>
+                  <media-mute-button class="pixel-mute" aria-label="Mute or unmute">
+                    <span class="when-muted">SOUND OFF</span><span class="when-unmuted">SOUND ON</span>
+                  </media-mute-button>
+                  <media-volume-slider class="pixel-volume-slider" aria-label="Volume">
+                    <media-slider-track class="volume-track">
+                      <media-slider-fill class="volume-fill"></media-slider-fill>
+                    </media-slider-track>
+                    <media-slider-thumb class="volume-thumb"></media-slider-thumb>
+                  </media-volume-slider>
+                  <media-fullscreen-button class="pixel-fullscreen" aria-label="Fullscreen">
+                    <span class="when-not-fullscreen">⛶ FULLSCREEN</span><span class="when-fullscreen">↙ EXIT</span>
+                  </media-fullscreen-button>
+                </media-controls-group>
+              </media-controls-content>
+            </media-controls>
+            <media-hotkey keys="Space" action="togglePaused"></media-hotkey>
+            <media-hotkey keys="m" action="toggleMuted"></media-hotkey>
+            <media-hotkey keys="f" action="toggleFullscreen"></media-hotkey>
+            <media-hotkey keys="ArrowLeft" action="seekStep" value="-5"></media-hotkey>
+            <media-hotkey keys="ArrowRight" action="seekStep" value="5"></media-hotkey>
+            <media-status-announcer></media-status-announcer>
+            <media-error-dialog>
+              <media-dialog-popup class="pixel-error">
+                <media-dialog-title>PLAYBACK ERROR</media-dialog-title>
+                <media-dialog-description></media-dialog-description>
+                <media-dialog-close>OK</media-dialog-close>
+              </media-dialog-popup>
+            </media-error-dialog>
+          </media-container>
+        </video-player>
+        <div class="stage-corner stage-corner-tl">LIVE PREVIEW</div>
+        <div class="stage-corner stage-corner-br">16:9 / VIDEO</div>
+      </div>
 
-      <media-hotkey keys="Space" action="togglePaused"></media-hotkey>
-      <media-hotkey keys="k" action="togglePaused"></media-hotkey>
-      <media-hotkey keys="m" action="toggleMuted"></media-hotkey>
-      <media-hotkey keys="f" action="toggleFullscreen"></media-hotkey>
-      <media-hotkey keys="ArrowLeft" action="seekStep" value="-5"></media-hotkey>
-      <media-hotkey keys="ArrowRight" action="seekStep" value="5"></media-hotkey>
-      <media-status-announcer></media-status-announcer>
+      <div class="utility-row">
+        <div class="utility-left">
+          <span class="utility-led"></span>
+          <span id="status-text">FILE LOADED</span>
+        </div>
+        <div class="utility-right"><span>BUFFER</span><div class="buffer-meter"><i id="buffer-fill"></i></div><span id="buffer-percent">--%</span></div>
+      </div>
 
-      <media-error-dialog>
-        <media-dialog-popup class="reg-error">
-          <media-dialog-title></media-dialog-title>
-          <media-dialog-description></media-dialog-description>
-          <media-dialog-close class="reg-btn">Close</media-dialog-close>
-        </media-dialog-popup>
-      </media-error-dialog>
-    </media-container>
-  </video-player>
+      <div class="app-bottom">
+        <section class="tool-panel chapters-panel">
+          <div class="panel-heading"><span>▤</span> CHAPTER MARKERS <span class="panel-count">03</span></div>
+          <div class="chapter-list">
+            <button type="button" class="chapter active" data-seek="0"><span class="chapter-number">01</span><span>INTRO / FLOWERS</span><span class="chapter-arrow">↗</span></button>
+            <button type="button" class="chapter" data-seek="25"><span class="chapter-number">02</span><span>THE MIDDLE</span><span class="chapter-arrow">↗</span></button>
+            <button type="button" class="chapter" data-seek="70"><span class="chapter-number">03</span><span>THE ENDING</span><span class="chapter-arrow">↗</span></button>
+          </div>
+          <p class="panel-note">SELECT A MARKER TO JUMP THROUGH THE FILE.</p>
+        </section>
 
-  <section class="notes" aria-label="Design notes">
-    <div><b>Concept</b>Print, not glass. Every surface is a flat riso ink on cream paper with a hard offset shadow, so the skin looks the same over any footage.</div>
-    <div><b>Details</b>The seek fill is two inks printed slightly off-register. The thumb is a registration mark. Buttons press flat, like a stamp.</div>
-    <div><b>Access</b>48px targets, a thick focus ring, text labels instead of icons, reduced-motion support, Space/K, M, F and arrow-key shortcuts.</div>
-  </section>
-</main>
+        <section class="tool-panel adjustments-panel">
+          <div class="panel-heading"><span>◒</span> DISPLAY SETTINGS <span class="panel-count">FX</span></div>
+          <div class="adjustment">
+            <label for="brightness">BRIGHTNESS <output id="brightness-value">100%</output></label>
+            <input id="brightness" type="range" min="50" max="150" value="100">
+          </div>
+          <div class="adjustment">
+            <label for="contrast">CONTRAST <output id="contrast-value">100%</output></label>
+            <input id="contrast" type="range" min="50" max="150" value="100">
+          </div>
+          <div class="adjustment-actions">
+            <button type="button" class="small-action" id="reset-fx">RESET</button>
+            <button type="button" class="small-action save-action" id="save-fx">SAVE SETTINGS</button>
+          </div>
+        </section>
 
-<script>
-  // Mux bonus: paste your Mux playback ID here. Leave empty to use the local demo clip.
-  const MUX_PLAYBACK_ID = "";
-  document.getElementById("v").src = MUX_PLAYBACK_ID
-    ? "https://stream.mux.com/" + MUX_PLAYBACK_ID + "/highest.mp4"
-    : "demo.mp4";
-</script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/video-player.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/container.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls-content.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/controls-group.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/play-button.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/time-slider.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/volume-slider.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-track.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-buffer.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-fill.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/slider-thumb.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/time.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/mute-button.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/fullscreen-button.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/hotkey.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/status-announcer.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/error-dialog.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-popup.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-title.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-description.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.3.0/ui/dialog-close.js"></script>
+        <section class="tool-panel info-panel">
+          <div class="panel-heading"><span>▣</span> FILE INFO <span class="panel-count">INFO</span></div>
+          <div class="file-info"><span>FORMAT</span><b>MP4 / H.264</b></div>
+          <div class="file-info"><span>ASPECT</span><b>16 : 9</b></div>
+          <div class="file-info"><span>ENGINE</span><b>VIDEO.JS V10</b></div>
+          <div class="file-info"><span>STATUS</span><b class="file-ready">● READY</b></div>
+        </section>
+      </div>
+      <footer class="window-statusbar"><span>PIXELSTUDIO MEDIA SYSTEM</span><span>ALL SYSTEMS NOMINAL</span><span>© 2001—2026</span></footer>
+    </section>
+
+    <footer class="page-footer">
+      <span>MADE FOR THE INTERNET, NOT THE ARCHIVE.</span>
+      <span>KEYBOARD: SPACE PLAY / M MUTE / F FULLSCREEN / ← → SEEK</span>
+    </footer>
+  </main>
+
+  <dialog id="notice-dialog" class="retro-dialog">
+    <div class="dialog-title"><span id="dialog-heading">NOTICE</span><button type="button" id="dialog-x" aria-label="Close dialog">×</button></div>
+    <div class="dialog-content" id="dialog-copy">This is a PLAYBACK.EXE feature.</div>
+    <div class="dialog-actions"><button type="button" id="dialog-ok">OK</button></div>
+  </dialog>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
